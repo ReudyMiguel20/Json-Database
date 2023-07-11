@@ -1,11 +1,20 @@
 package server;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        // Start the server socket
+        socketServer();
+
         Scanner scanner = new Scanner(System.in);
 
         // Create an array of 100 empty strings
@@ -65,5 +74,24 @@ public class Main {
                 }
             }
         }
+    }
+
+    // Start the server socket and listen for connections from clients on port 23456
+    public static void socketServer() throws IOException {
+        int port = 23456;
+        java.net.ServerSocket serverSocket = new java.net.ServerSocket(port);
+        System.out.println("Server started!");
+
+//        while (true) {
+            java.net.Socket socket = serverSocket.accept();
+            DataInputStream input = new DataInputStream(socket.getInputStream());
+            DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+
+            String outputString = "A record # 12 was sent!";
+            output.writeUTF(outputString);
+
+            System.out.printf("Received: %s%n", input.readUTF());
+            System.out.println("Sent: " + outputString);
+//        }
     }
 }
